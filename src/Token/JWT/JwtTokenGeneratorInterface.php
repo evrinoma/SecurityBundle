@@ -1,6 +1,6 @@
 <?php
 
-namespace Evrinoma\SecurityBundl\Token\JWT;
+namespace Evrinoma\SecurityBundle\Token\JWT;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 

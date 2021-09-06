@@ -1,6 +1,6 @@
 <?php
 
-namespace Evrinoma\SecurityBundl\Provider\JWT;
+namespace Evrinoma\SecurityBundle\Provider\JWT;
 
 use Symfony\Component\HttpFoundation\Cookie;
 

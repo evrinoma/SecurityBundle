@@ -1,6 +1,6 @@
 <?php
 
-namespace Evrinoma\SecurityBundl\Token\JWT;
+namespace Evrinoma\SecurityBundle\Token\JWT;
 
 interface JwtTokenServiceInterface extends JwtTokenGeneratorInterface, JwtTokenInterface
 {

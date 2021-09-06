@@ -1,8 +1,8 @@
 <?php
 
-namespace Evrinoma\SecurityBundl\JWT;
+namespace Evrinoma\SecurityBundle\Handler;
 
-use Evrinoma\SecurityBundl\Token\JWT\JwtTokenInterface;
+use Evrinoma\SecurityBundle\Token\JWT\JwtTokenInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 interface JwtHandlerInterface

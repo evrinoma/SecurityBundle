@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Evrinoma\SecurityBundl\Token\JWT;
+namespace Evrinoma\SecurityBundle\Token\JWT;
 
 
-use Evrinoma\SecurityBundl\Provider\JWT\JwtCookieProviderInterface;
+use Evrinoma\SecurityBundle\Provider\JWT\JwtCookieProviderInterface;
 use Evrinoma\SecurityBundle\Model\SecurityModelInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Symfony\Component\HttpFoundation\Cookie;

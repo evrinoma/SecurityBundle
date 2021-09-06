@@ -1,10 +1,10 @@
 <?php
 
-namespace Evrinoma\SecurityBundl\JWT;
+namespace Evrinoma\SecurityBundle\Handler;
 
-use Evrinoma\SecurityBundl\Token\JWT\JwtTokenGeneratorInterface;
-use Evrinoma\SecurityBundl\Token\JWT\JwtTokenServiceInterface;
-use Evrinoma\SecurityBundl\Token\JWT\JwtTokenInterface;
+use Evrinoma\SecurityBundle\Token\JWT\JwtTokenGeneratorInterface;
+use Evrinoma\SecurityBundle\Token\JWT\JwtTokenServiceInterface;
+use Evrinoma\SecurityBundle\Token\JWT\JwtTokenInterface;
 use Evrinoma\SecurityBundle\AccessControl\AccessControlInterface;
 use Evrinoma\SecurityBundle\Configuration\Configuration;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\InvalidTokenException;
