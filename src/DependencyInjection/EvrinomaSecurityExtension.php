@@ -3,7 +3,7 @@
 
 namespace Evrinoma\SecurityBundle\DependencyInjection;
 
-use Evrinoma\SecurityBundle\SecurityBundle;
+use Evrinoma\SecurityBundle\EvrinomaSecurityBundle;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 
 
-class SecurityExtension extends Extension
+class EvrinomaSecurityExtension extends Extension
 {
 //region SECTION: Fields
     private ContainerBuilder $container;
@@ -29,29 +29,27 @@ class SecurityExtension extends Extension
         $config          = $this->processConfiguration($configuration, $configs);
         $this->container = $container;
 
-        if (array_key_exists('security', $config)) {
-            $this->addDefinition(
-                'Evrinoma\SecurityBundle\Configuration\Configuration',
-                'evrinoma.security.configuration',
-                [
-                    $config['security']['event']['on_authentication_success'],
-                    $config['security']['event']['on_authentication_failure'],
-                    $config['security']['redirect_by_server'],
-                    $config['security']['firewall_session_key'],
-                    $config['security']['route']['login'],
-                    $config['security']['route']['check'],
-                    $config['security']['route']['redirect'],
-                    $config['security']['form']['username'],
-                    $config['security']['form']['password'],
-                    $config['security']['form']['csrf_token'],
+        $this->addDefinition(
+            'Evrinoma\SecurityBundle\Configuration\Configuration',
+            'evrinoma.security.configuration',
+            [
+                $config['event']['on_authentication_success'],
+                $config['event']['on_authentication_failure'],
+                $config['redirect_by_server'],
+                $config['firewall_session_key'],
+                $config['route']['login'],
+                $config['route']['check'],
+                $config['route']['redirect'],
+                $config['form']['username'],
+                $config['form']['password'],
+                $config['form']['csrf_token'],
 
-                ],
-                true
-            );
-            if (array_key_exists('ldap_servers', $config['security']) && $ldapServers = $config['security']['ldap_servers']) {
-                $definition = $this->container->getDefinition('evrinoma.security.provider.ldap');
-                $definition->addMethodCall('setServers', [$ldapServers]);
-            }
+            ],
+            true
+        );
+        if (array_key_exists('ldap_servers', $config) && $ldapServers = $config['ldap_servers']) {
+            $definition = $this->container->getDefinition('evrinoma.security.provider.ldap');
+            $definition->addMethodCall('setServers', [$ldapServers]);
         }
 
         if (array_key_exists('LexikJWTAuthenticationBundle', $container->getParameterBag()->get('kernel.bundles'))) {
@@ -97,7 +95,7 @@ class SecurityExtension extends Extension
 //region SECTION: Getters/Setters
     public function getAlias()
     {
-        return SecurityBundle::SECURITY_BUNDLE;
+        return EvrinomaSecurityBundle::SECURITY_BUNDLE;
     }
 //endregion Getters/Setters
 }

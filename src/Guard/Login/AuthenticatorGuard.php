@@ -19,7 +19,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
-use Symfony\Component\Security\Http\HttpSecurity;
+use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class AuthenticatorGuard extends AbstractGuardAuthenticator
@@ -27,9 +27,9 @@ class AuthenticatorGuard extends AbstractGuardAuthenticator
 
 //region SECTION: Fields
     /**
-     * @var HttpSecurity
+     * @var HttpUtils
      */
-    private HttpSecurity $httpSecurity;
+    private HttpUtils $httpUtils;
 
     /**
      * @var TokenStorageInterface|null
@@ -61,15 +61,15 @@ class AuthenticatorGuard extends AbstractGuardAuthenticator
 
 
     /**
-     * @param HttpSecurity                 $httpSecurity
+     * @param HttpUtils                 $httpUtils
      * @param TokenStorageInterface     $tokenStorage
      * @param CsrfTokenManagerInterface $csrfTokenManager
      * @param Configuration             $configuration
      * @param EncoderFactoryInterface   $encoderFactory
      */
-    public function __construct(HttpSecurity $httpSecurity, TokenStorageInterface $tokenStorage, CsrfTokenManagerInterface $csrfTokenManager, EventDispatcherInterface $eventDispatcher, Configuration $configuration, EncoderFactoryInterface $encoderFactory)
+    public function __construct(HttpUtils $httpUtils, TokenStorageInterface $tokenStorage, CsrfTokenManagerInterface $csrfTokenManager, EventDispatcherInterface $eventDispatcher, Configuration $configuration, EncoderFactoryInterface $encoderFactory)
     {
-        $this->httpSecurity        = $httpSecurity;
+        $this->httpUtils        = $httpUtils;
         $this->tokenStorage     = $tokenStorage;
         $this->csrfTokenManager = $csrfTokenManager;
         $this->encoderFactory   = $encoderFactory;
@@ -100,7 +100,7 @@ class AuthenticatorGuard extends AbstractGuardAuthenticator
         if ($this->configuration->event()->isAuthenticationFailureEnabled()) {
             $event = new AuthenticationFailureEvent();
             $this->eventDispatcher->dispatch($event);
-            $response =new JsonResponse($event->responseData(), Response::HTTP_UNAUTHORIZED);
+            $response = new JsonResponse($event->responseData(), Response::HTTP_UNAUTHORIZED);
             foreach ($event->headerCookies() as $cookie) {
                 $response->headers->setCookie($cookie);
             }
@@ -120,7 +120,7 @@ class AuthenticatorGuard extends AbstractGuardAuthenticator
     {
         $response = null;
 
-        if ($this->httpSecurity->checkRequestPath($request, '/'.$this->configuration->route()->loginCheck())) {
+        if ($this->httpUtils->checkRequestPath($request, '/'.$this->configuration->route()->loginCheck())) {
             $redirectUrl = $this->configuration->route()->redirect();
 
             if ($this->configuration->event()->isAuthenticationSuccessEnabled()) {
@@ -136,7 +136,7 @@ class AuthenticatorGuard extends AbstractGuardAuthenticator
             }
 
             if ($this->configuration->isRedirectByServer()) {
-                $response = $this->httpSecurity->createRedirectResponse($request, $redirectUrl);
+                $response = $this->httpUtils->createRedirectResponse($request, $redirectUrl);
             }
         }
 
@@ -151,7 +151,7 @@ class AuthenticatorGuard extends AbstractGuardAuthenticator
      */
     public function start(Request $request, AuthenticationException $authException = null)
     {
-        return $this->httpSecurity->createRedirectResponse($request, $this->configuration->route()->login());
+        return $this->httpUtils->createRedirectResponse($request, $this->configuration->route()->login());
     }
 
     /**

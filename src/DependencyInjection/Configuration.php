@@ -2,15 +2,10 @@
 
 namespace Evrinoma\SecurityBundle\DependencyInjection;
 
-use Evrinoma\SecurityBundle\SecurityBundle;
+use Evrinoma\SecurityBundle\EvrinomaSecurityBundle;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
-/**
- * Class Configuration
- *
- * @package Evrinoma\ProjectBundle\DependencyInjection
- */
 class Configuration implements ConfigurationInterface
 {
 //region SECTION: Getters/Setters
@@ -19,12 +14,10 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder(SecurityBundle::SECURITY_BUNDLE);
+        $treeBuilder = new TreeBuilder(EvrinomaSecurityBundle::SECURITY_BUNDLE);
         $rootNode    = $treeBuilder->getRootNode();
 
         $rootNode
-            ->children()
-            ->arrayNode('security')
             ->children()
                 ->scalarNode('firewall_session_key')->isRequired()->cannotBeEmpty()->end()
                 ->arrayNode('route')->addDefaultsIfNotSet()
@@ -57,7 +50,6 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
-            ->end()
             ->end();
 
         return $treeBuilder;

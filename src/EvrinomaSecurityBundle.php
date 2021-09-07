@@ -3,17 +3,17 @@
 
 namespace Evrinoma\SecurityBundle;
 
-use Evrinoma\SecurityBundle\DependencyInjection\SecurityExtension;
+use Evrinoma\SecurityBundle\DependencyInjection\EvrinomaSecurityExtension;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class SecurityBundle extends Bundle
+class EvrinomaSecurityBundle extends Bundle
 {
-    public const SECURITY_BUNDLE = 'security';
+    public const SECURITY_BUNDLE = 'safety';
 
     public function getContainerExtension()
     {
         if (null === $this->extension) {
-            $this->extension = new SecurityExtension();
+            $this->extension = new EvrinomaSecurityExtension();
         }
         return $this->extension;
     }

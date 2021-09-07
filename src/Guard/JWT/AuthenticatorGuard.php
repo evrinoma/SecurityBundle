@@ -21,7 +21,7 @@ class AuthenticatorGuard extends AbstractGuardAuthenticator
     /**
      * @var JWTTokenManagerInterface
      */
-    private $jwtManager;
+    private JWTTokenManagerInterface $jwtManager;
 //endregion Fields
 
 //region SECTION: Constructor
