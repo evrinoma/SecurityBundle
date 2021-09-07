@@ -1,0 +1,32 @@
+{
+  "name": "evrinoma/security-bundle",
+  "description": "Security pack",
+  "keywords": [
+    "Secure",
+    "Core",
+    "JWT",
+    "Voiter"
+  ],
+  "type": "symfony-bundle",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Nikolay Nikolaev",
+      "email": "evrinoma@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^7.4",
+    "lexik/jwt-authentication-bundle": "^2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Evrinoma\\SecurityBundle\\": "src/"
+    },
+    "exclude-from-classmap": [
+      "/Tests/"
+    ]
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
