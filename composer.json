@@ -17,6 +17,7 @@
   ],
   "require": {
     "php": "^7.4",
+    "evrinoma/utils-bundle": "dev-master",
     "lexik/jwt-authentication-bundle": "^2"
   },
   "autoload": {
@@ -28,5 +29,11 @@
     ]
   },
   "minimum-stability": "dev",
-  "prefer-stable": true
+  "prefer-stable": true,
+  "repositories": {
+    "utils": {
+      "type": "vcs",
+      "url": "https://github.com/evrinoma/UtilsBundle.git"
+    }
+  }
 }
