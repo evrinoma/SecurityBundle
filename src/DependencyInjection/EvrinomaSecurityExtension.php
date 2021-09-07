@@ -4,7 +4,7 @@
 namespace Evrinoma\SecurityBundle\DependencyInjection;
 
 use Evrinoma\SecurityBundle\EvrinomaSecurityBundle;
-use Evrinoma\UtilsBundle\DependencyInjection\Helper;
+use Evrinoma\UtilsBundle\DependencyInjection\HelperTrait;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class EvrinomaSecurityExtension extends Extension
 {
-    use Helper;
+    use HelperTrait;
 
 //region SECTION: Public
     public function load(array $configs, ContainerBuilder $container)
