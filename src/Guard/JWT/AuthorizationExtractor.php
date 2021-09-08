@@ -5,6 +5,7 @@ namespace Evrinoma\SecurityBundle\Guard\JWT;
 
 
 use Evrinoma\SecurityBundle\Guard\ExtractorInterface;
+use Evrinoma\SecurityBundle\Model\SecurityModelInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 final class AuthorizationExtractor implements ExtractorInterface
@@ -41,7 +42,9 @@ final class AuthorizationExtractor implements ExtractorInterface
     public function extract(Request $request): void
     {
         if ($request->headers->has($this->jwtAccessTokenKey)) {
-            $this->setJwtAccessToken(trim($request->headers->get($this->jwtAccessTokenKey)));
+            if (preg_match('/'.ucfirst(mb_strtolower(SecurityModelInterface::BEARER)).'\s(\S+)/', $request->headers->get($this->jwtAccessTokenKey), $matches)) {
+                $this->setJwtAccessToken(trim($matches[1]));
+            }
         }
     }
 //endregion Public

@@ -45,7 +45,7 @@ class AuthenticatorGuard extends AbstractGuardAuthenticator
      */
     public function supports(Request $request)
     {
-        return $request->headers->has(SecurityModelInterface::BEARER);
+        return $request->headers->has(SecurityModelInterface::AUTHORIZATION);
     }
 
     /**
@@ -114,10 +114,11 @@ class AuthenticatorGuard extends AbstractGuardAuthenticator
      * @param Request $request
      *
      * @return mixed|null
+     * @throws AuthenticationException
      */
     public function getCredentials(Request $request)
     {
-        $extractor = new AuthorizationExtractor(SecurityModelInterface::BEARER);
+        $extractor = new AuthorizationExtractor(SecurityModelInterface::AUTHORIZATION);
 
         $extractor->extract($request);
 
