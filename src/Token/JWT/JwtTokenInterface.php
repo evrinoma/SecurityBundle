@@ -24,4 +24,9 @@ interface JwtTokenInterface
      * @return string
      */
     public function getRefreshToken(): string;
+
+    /**
+     * @return bool
+     */
+    public function isValid(): bool;
 }
