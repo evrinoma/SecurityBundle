@@ -104,6 +104,9 @@ class AuthenticatorGuard extends AbstractGuardAuthenticator
             foreach ($event->headerCookies() as $cookie) {
                 $response->headers->setCookie($cookie);
             }
+            foreach ($event->headerData() as $key => $value) {
+                $response->headers->set($key, $value);
+            }
         }
 
         return $response;
@@ -130,6 +133,9 @@ class AuthenticatorGuard extends AbstractGuardAuthenticator
                 $response    = new JsonResponse($event->responseData(), Response::HTTP_OK);
                 foreach ($event->headerCookies() as $cookie) {
                     $response->headers->setCookie($cookie);
+                }
+                foreach ($event->headerData() as $key => $value) {
+                    $response->headers->set($key, $value);
                 }
             } else {
                 $response = new JsonResponse([], Response::HTTP_NO_CONTENT);
