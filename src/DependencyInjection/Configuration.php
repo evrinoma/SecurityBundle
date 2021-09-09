@@ -3,11 +3,15 @@
 namespace Evrinoma\SecurityBundle\DependencyInjection;
 
 use Evrinoma\SecurityBundle\EvrinomaSecurityBundle;
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
+use function PHPUnit\Framework\throwException;
 
 class Configuration implements ConfigurationInterface
 {
+
 //region SECTION: Getters/Setters
     /**
      * {@inheritdoc}
@@ -15,6 +19,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder(EvrinomaSecurityBundle::SECURITY_BUNDLE);
+
         $rootNode    = $treeBuilder->getRootNode();
 
         $rootNode
@@ -50,9 +55,69 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+                ->append($this->getLexikNode())
             ->end();
 
         return $treeBuilder;
+    }
+
+    private function getLexikNode()
+    {
+        $treeBuilder = new TreeBuilder('token');
+        $rootNode    = $treeBuilder->getRootNode();
+
+        $rootNode
+            ->isRequired()
+            ->addDefaultsIfNotSet()
+            ->treatFalseLike(['enabled' => false])
+            ->treatTrueLike(['enabled' => true])
+            ->treatNullLike(['jwt' => ['enabled' => false]])
+             ->validate()
+            ->ifTrue(function ($v) {
+                if (is_array($v) && (count($v) === 1)) {
+                    return true;
+                }
+                return false;
+            })
+            ->then(function ($v){
+                if (array_key_exists('enabled',$v) && $v['enabled']) {
+                        throw new \InvalidArgumentException(sprintf('token required options are missing, just only enabled', json_encode($v))) ;
+                }
+                return $v;
+            })
+            ->end()
+            ->children()
+            ->booleanNode('enabled')->defaultTrue()->end()
+            ->arrayNode('jwt')
+            ->treatNullLike(['enabled' => false])
+            ->validate()
+            ->ifTrue(function ($v) {
+                if (is_array($v) && (count($v) === 1)) {
+                    return true;
+                }
+
+                return false;
+            })
+            ->then(function ($v){
+                if (array_key_exists('enabled',$v) && !$v['enabled']) {
+                    throw new \InvalidArgumentException(sprintf('jwt option is missing or token option require false value', json_encode($v)));
+                }
+
+                return $v;
+            })
+            ->end()
+                    ->children()
+                        ->booleanNode('enabled')->defaultTrue()->end()
+                        ->scalarNode('access_ttl')->end()
+                        ->scalarNode('refresh_ttl')->isRequired()->cannotBeEmpty()->end()
+                        ->scalarNode('domain')->isRequired()->cannotBeEmpty()->end()
+                    ->end()
+                ->end()
+            ->end()
+         ;
+
+
+        return $rootNode;
     }
 //endregion Getters/Setters
 }

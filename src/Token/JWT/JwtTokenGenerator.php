@@ -36,11 +36,11 @@ final class JwtTokenGenerator implements JwtTokenServiceInterface
     /**
      * @var Cookie
      */
-    private Cookie $refreshTokenCookie;
+    private ?Cookie $refreshTokenCookie = null;
     /**
      * @var Cookie
      */
-    private Cookie $accessTokenCookie;
+    private ?Cookie $accessTokenCookie = null;
     /**
      * @var string
      */

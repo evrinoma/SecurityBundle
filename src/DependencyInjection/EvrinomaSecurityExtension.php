@@ -59,6 +59,36 @@ class EvrinomaSecurityExtension extends Extension
                 [new Reference('Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface')],
                 true
             );
+
+            $this->addDefinition(
+                $container,
+                'Evrinoma\SecurityBundle\Provider\JWT\JwtCookieProviderAdaptor',
+                'evrinoma.security.provider.jwt.cookie',
+                [new Reference('lexik_jwt_authentication.cookie_provider.BEARER')],
+                false
+            );
+
+            if ($config['token']['enabled']) {
+                $this->addDefinition(
+                    $container,
+                    'Evrinoma\SecurityBundle\Token\JWT\JwtTokenGenerator',
+                    'evrinoma.security.token.jwt.generator',
+                    [new Reference('lexik_jwt_authentication.encoder.lcobucci'), new Reference('evrinoma.security.provider.jwt.cookie'), $config['token']['jwt']['domain'], $config['token']['jwt']['access_ttl'], $config['token']['jwt']['refresh_ttl']],
+                    true
+                );
+                $container->addAliases(['Evrinoma\SecurityBundle\Token\JWT\JwtTokenServiceInterface' => 'Evrinoma\SecurityBundle\Token\JWT\JwtTokenGenerator']);
+
+
+                $definition = $this->addDefinition(
+                    $container,
+                    'Evrinoma\SecurityBundle\Handler\JwtHandler',
+                    'evrinoma.security.handler.jwt',
+                    [],
+                    true
+                );
+                $definition->setAutoconfigured(true)->setAutowired(true);
+                $container->addAliases(['Evrinoma\SecurityBundle\Handler\JwtHandlerInterface' => 'Evrinoma\SecurityBundle\Handler\JwtHandler']);
+            }
         }
     }
 //endregion Public
