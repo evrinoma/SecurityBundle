@@ -10,7 +10,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-final class JwtTokenGenerator implements JwtTokenServiceInterface
+final class JwtTokenService implements JwtTokenServiceInterface
 {
 //region SECTION: Fields
     /**
@@ -34,11 +34,11 @@ final class JwtTokenGenerator implements JwtTokenServiceInterface
      */
     private string $domain;
     /**
-     * @var Cookie
+     * @var Cookie|null
      */
     private ?Cookie $refreshTokenCookie = null;
     /**
-     * @var Cookie
+     * @var Cookie|null
      */
     private ?Cookie $accessTokenCookie = null;
     /**
@@ -82,12 +82,20 @@ final class JwtTokenGenerator implements JwtTokenServiceInterface
     }
 
 //region SECTION: Public
+
     /**
      * @return bool
      */
     public function isValid(): bool
     {
         return $this->valid;
+    }
+
+    public function reset(): JwtTokenServiceInterface
+    {
+        $this->setValid(false);
+
+        return $this;
     }
 
     /**
@@ -114,52 +122,69 @@ final class JwtTokenGenerator implements JwtTokenServiceInterface
     /**
      * @param bool $valid
      *
-     * @return JwtTokenGenerator
+     * @return JwtTokenService
      */
-    private function setValid(bool $valid = true): JwtTokenServiceInterface
+    private function setValid(bool $valid = true): JwtTokenService
     {
         $this->valid = $valid;
 
         return $this;
     }
 
-    private function setUser(UserInterface $user): JwtTokenServiceInterface
+    private function setUser(UserInterface $user): JwtTokenService
     {
         $this->user = $user;
 
         return $this;
     }
 
-    private function generateAccessToken(): JwtTokenServiceInterface
+    private function generateAccessToken(): JwtTokenService
     {
         $this->accessToken = $this->encoder->encode([JwtTokenGeneratorInterface::PAYLOAD_KEY => $this->user->getUsername(), JwtTokenGeneratorInterface::EXP_KEY => $this->time + $this->accessTokenTtl]);
 
         return $this;
     }
 
-    private function generateRefreshToken(): JwtTokenServiceInterface
+    private function generateRefreshToken(): JwtTokenService
     {
         $this->refreshToken = $this->encoder->encode([JwtTokenGeneratorInterface::PAYLOAD_KEY => $this->user->getUsername(), JwtTokenGeneratorInterface::EXP_KEY => $this->time + $this->refreshTokenTtl]);
 
         return $this;
     }
 
-    private function generateRefreshTokenCookie(): JwtTokenServiceInterface
+    private function generateRefreshTokenCookie(): JwtTokenService
     {
-        $this->refreshTokenCookie = $this->cookieProvider->createCookie($this->refreshToken, SecurityModelInterface::REFRESH, $this->time + $this->refreshTokenTtl, 'lax', '/', $this->domain, false, true);
+        $this->refreshTokenCookie = $this->createCookie($this->refreshToken, SecurityModelInterface::REFRESH, $this->refreshTokenTtl);
 
         return $this;
     }
 
-    private function generateAccessTokenCookie(): JwtTokenServiceInterface
+    private function generateAccessTokenCookie(): JwtTokenService
     {
-        $this->accessTokenCookie = $this->cookieProvider->createCookie($this->accessToken, SecurityModelInterface::BEARER, $this->time + $this->refreshTokenTtl, 'lax', '/', $this->domain, false, true);
+        $this->accessTokenCookie = $this->createCookie($this->accessToken, SecurityModelInterface::BEARER, $this->accessTokenTtl);
 
         return $this;
+    }
+
+    private function createCookie(string $payload, string $key, int $offset = 0, bool $jwtCookie = true): Cookie
+    {
+        return $jwtCookie ?
+            $this->cookieProvider->createCookie($payload, $key, $this->time + $offset, Cookie::SAMESITE_LAX, '/', $this->domain, false, true)
+            : new Cookie($key, $payload, $this->time + $offset, '/', $this->domain, false, true, Cookie::SAMESITE_LAX);
     }
 //endregion Private
 
 //region SECTION: Getters/Setters
+    public function getExpiredRefreshTokenCookie(): Cookie
+    {
+        return $this->createCookie("", SecurityModelInterface::REFRESH, 0, false);
+    }
+
+    public function getExpiredAccessTokenCookie(): Cookie
+    {
+        return $this->createCookie("", SecurityModelInterface::BEARER, 0, false);
+    }
+
     /**
      * @return Cookie
      */
@@ -176,13 +201,17 @@ final class JwtTokenGenerator implements JwtTokenServiceInterface
         return $this->accessTokenCookie;
     }
 
-
     /**
      * @return string
      */
     public function getAccessToken(): string
     {
         return $this->accessToken;
+    }
+
+    public function getExpiredTokenCookie(): JwtTokenExpiredInterface
+    {
+        return $this;
     }
 
     /**

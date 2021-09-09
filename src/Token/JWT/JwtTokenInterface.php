@@ -6,10 +6,19 @@ use Symfony\Component\HttpFoundation\Cookie;
 
 interface JwtTokenInterface
 {
+//region SECTION: Public
+    /**
+     * @return bool
+     */
+    public function isValid(): bool;
+//endregion Public
+
+//region SECTION: Getters/Setters
     /**
      * @return Cookie
      */
     public function getAccessTokenCookie(): Cookie;
+
     /**
      * @return Cookie
      */
@@ -26,7 +35,8 @@ interface JwtTokenInterface
     public function getRefreshToken(): string;
 
     /**
-     * @return bool
+     * @return JwtTokenExpiredInterface
      */
-    public function isValid(): bool;
+    public function getExpiredTokenCookie(): JwtTokenExpiredInterface;
+//endregion Getters/Setters
 }

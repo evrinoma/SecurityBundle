@@ -2,7 +2,7 @@
 
 namespace Evrinoma\SecurityBundle\Token\JWT;
 
-interface JwtTokenServiceInterface extends JwtTokenGeneratorInterface, JwtTokenInterface
+interface JwtTokenServiceInterface extends JwtTokenGeneratorInterface, JwtTokenInterface, JwtTokenExpiredInterface
 {
 
 }
