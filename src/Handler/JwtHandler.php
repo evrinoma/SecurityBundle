@@ -2,11 +2,11 @@
 
 namespace Evrinoma\SecurityBundle\Handler;
 
-use Evrinoma\SecurityBundle\Token\JWT\JwtTokenGeneratorInterface;
-use Evrinoma\SecurityBundle\Token\JWT\JwtTokenServiceInterface;
-use Evrinoma\SecurityBundle\Token\JWT\JwtTokenInterface;
 use Evrinoma\SecurityBundle\AccessControl\AccessControlInterface;
 use Evrinoma\SecurityBundle\Configuration\Configuration;
+use Evrinoma\SecurityBundle\Token\JWT\JwtTokenGeneratorInterface;
+use Evrinoma\SecurityBundle\Token\JWT\JwtTokenInterface;
+use Evrinoma\SecurityBundle\Token\JWT\JwtTokenServiceInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\InvalidTokenException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\MissingTokenException;
@@ -49,14 +49,20 @@ final class JwtHandler implements JwtHandlerInterface
 //region SECTION: Public
     public function doCheck(Request $request): JwtTokenInterface
     {
-        if ($this->accessControl->isAuthorize() && !$this->httpUtils->checkRequestPath($request, '/'.$this->configuration->route()->loginCheck())) {
+        $this->jwtTokenGenerator->reset();
+
+        if ($this->accessControl->isAuthorize() && !$this->httpUtils->checkRequestPath($request, '/'.$this->configuration->route()->loginCheck()) && !$this->httpUtils->checkRequestPath($request, '/'.$this->configuration->route()->login())) {
             if ($this->refreshToken) {
                 try {
                     $this->doCheckUser($this->accessToken);
                 } catch (MissingTokenException | JWTDecodeFailureException $e) {
                     if ($e instanceof MissingTokenException || ($e instanceof JWTDecodeFailureException && JWTDecodeFailureException::EXPIRED_TOKEN === $e->getReason())) {
-                        $user = $this->doCheckUser($this->accessToken);
-                        $this->jwtTokenGenerator->generate($user);
+                        try {
+                            $user = $this->doCheckUser($this->refreshToken);
+                            $this->jwtTokenGenerator->generate($user);
+                        } catch (\Exception $e) {
+                            throw new InvalidTokenException('Error');
+                        }
                     }
                 } catch (\Exception $e) {
                     throw new InvalidTokenException('Invalid JWT Token');

@@ -3,6 +3,7 @@
 namespace Evrinoma\SecurityBundle\Handler;
 
 use Evrinoma\SecurityBundle\Token\JWT\JwtTokenInterface;
+use Evrinoma\SecurityBundle\Token\JWT\JwtTokenServiceInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 interface JwtHandlerInterface
