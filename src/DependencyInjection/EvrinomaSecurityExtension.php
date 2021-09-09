@@ -71,12 +71,12 @@ class EvrinomaSecurityExtension extends Extension
             if ($config['token']['enabled']) {
                 $this->addDefinition(
                     $container,
-                    'Evrinoma\SecurityBundle\Token\JWT\JwtTokenGenerator',
+                    'Evrinoma\SecurityBundle\Token\JWT\JwtTokenService',
                     'evrinoma.security.token.jwt.generator',
                     [new Reference('lexik_jwt_authentication.encoder.lcobucci'), new Reference('evrinoma.security.provider.jwt.cookie'), $config['token']['jwt']['domain'], $config['token']['jwt']['access_ttl'], $config['token']['jwt']['refresh_ttl']],
                     true
                 );
-                $container->addAliases(['Evrinoma\SecurityBundle\Token\JWT\JwtTokenServiceInterface' => 'Evrinoma\SecurityBundle\Token\JWT\JwtTokenGenerator']);
+                $container->addAliases(['Evrinoma\SecurityBundle\Token\JWT\JwtTokenServiceInterface' => 'Evrinoma\SecurityBundle\Token\JWT\JwtTokenService']);
 
 
                 $definition = $this->addDefinition(
