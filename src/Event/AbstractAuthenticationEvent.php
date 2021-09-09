@@ -18,6 +18,10 @@ abstract class AbstractAuthenticationEvent implements EventInterface
      */
     private array $response = [];
     /**
+     * @var array
+     */
+    private array $headers = [];
+    /**
      * @var Cookie[]
      */
     private array $cookies = [];
@@ -27,6 +31,11 @@ abstract class AbstractAuthenticationEvent implements EventInterface
     public function headerCookies(): array
     {
         return $this->cookies;
+    }
+
+    public function headerData(): array
+    {
+        return $this->headers;
     }
 
     public function responseData(): array
@@ -42,6 +51,13 @@ abstract class AbstractAuthenticationEvent implements EventInterface
     public function addCookie(Cookie $cookie): EventInterface
     {
         $this->cookies[] = $cookie;
+
+        return $this;
+    }
+
+    public function addHeader(string $key, string $value): EventInterface
+    {
+        $this->headers[$key] = $value;
 
         return $this;
     }
