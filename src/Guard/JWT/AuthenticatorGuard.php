@@ -3,6 +3,7 @@
 namespace Evrinoma\SecurityBundle\Guard\JWT;
 
 use Evrinoma\SecurityBundle\Model\SecurityModelInterface;
+use Evrinoma\SecurityBundle\Token\JWT\JwtTokenGeneratorInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\PreAuthenticationJWTUserToken;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
@@ -137,7 +138,7 @@ class AuthenticatorGuard extends AbstractGuardAuthenticator
             throw new AuthenticationException($e->getMessage());
         }
 
-        $extractor->setUsername($payload['username']);
+        $extractor->setUsername(JwtTokenGeneratorInterface::PAYLOAD_KEY);
 
         return $extractor;
     }
