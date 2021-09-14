@@ -37,6 +37,11 @@ interface JwtTokenInterface
     /**
      * @return JwtTokenExpiredInterface
      */
-    public function getExpiredTokenCookie(): JwtTokenExpiredInterface;
+    public function expired(): JwtTokenExpiredInterface;
+
+    /**
+     * @return JwtTokenRefreshInterface
+     */
+    public function refresh(): JwtTokenRefreshInterface;
 //endregion Getters/Setters
 }

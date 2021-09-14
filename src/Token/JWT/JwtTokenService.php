@@ -116,6 +116,16 @@ final class JwtTokenService implements JwtTokenServiceInterface
 
         return $this;
     }
+
+    public function expired(): JwtTokenExpiredInterface
+    {
+        return $this;
+    }
+
+    public function refresh(): JwtTokenRefreshInterface
+    {
+        return $this;
+    }
 //endregion Public
 
 //region SECTION: Private
@@ -154,23 +164,23 @@ final class JwtTokenService implements JwtTokenServiceInterface
 
     private function generateRefreshTokenCookie(): JwtTokenService
     {
-        $this->refreshTokenCookie = $this->createCookie($this->refreshToken, SecurityModelInterface::REFRESH, $this->refreshTokenTtl);
+        $this->refreshTokenCookie = $this->createCookie($this->refreshToken, SecurityModelInterface::REFRESH, $this->time + $this->refreshTokenTtl);
 
         return $this;
     }
 
     private function generateAccessTokenCookie(): JwtTokenService
     {
-        $this->accessTokenCookie = $this->createCookie($this->accessToken, SecurityModelInterface::BEARER, $this->accessTokenTtl);
+        $this->accessTokenCookie = $this->createCookie($this->accessToken, SecurityModelInterface::BEARER, $this->time + $this->accessTokenTtl);
 
         return $this;
     }
 
-    private function createCookie(string $payload, string $key, int $offset = 0, bool $jwtCookie = true): Cookie
+    private function createCookie(string $payload, string $key, int $expire = 0, bool $jwtCookie = true): Cookie
     {
         return $jwtCookie ?
-            $this->cookieProvider->createCookie($payload, $key, $this->time + $offset, Cookie::SAMESITE_LAX, '/', $this->domain, false, true)
-            : new Cookie($key, $payload, $this->time + $offset, '/', $this->domain, false, true, Cookie::SAMESITE_LAX);
+            $this->cookieProvider->createCookie($payload, $key, $expire, Cookie::SAMESITE_LAX, '/', $this->domain, false, true)
+            : new Cookie($key, $payload, $expire, '/', $this->domain, false, true, Cookie::SAMESITE_LAX);
     }
 //endregion Private
 
@@ -209,11 +219,6 @@ final class JwtTokenService implements JwtTokenServiceInterface
         return $this->accessToken;
     }
 
-    public function getExpiredTokenCookie(): JwtTokenExpiredInterface
-    {
-        return $this;
-    }
-
     /**
      * @return string
      */
@@ -221,5 +226,34 @@ final class JwtTokenService implements JwtTokenServiceInterface
     {
         return $this->refreshToken;
     }
+
+    public function setRefreshToken(string $refreshToken): JwtTokenRefreshInterface
+    {
+        $this->refreshToken = $refreshToken;
+
+        return $this;
+    }
+
+    public function setRefreshTokenCookie(string $token, int $expire): JwtTokenRefreshInterface
+    {
+        $this->refreshTokenCookie = $this->createCookie($token, SecurityModelInterface::REFRESH, $expire);
+
+        return $this;
+    }
+
+    public function setAccessToken(string $accessToken): JwtTokenRefreshInterface
+    {
+        $this->accessToken = $accessToken;
+
+        return $this;
+    }
+
+    public function setAccessTokenCookie(string $token, int $expire): JwtTokenRefreshInterface
+    {
+        $this->accessTokenCookie = $this->createCookie($token, SecurityModelInterface::BEARER, $expire);
+
+        return $this;
+    }
 //endregion Getters/Setters
+
 }

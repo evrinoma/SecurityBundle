@@ -54,14 +54,25 @@ final class JwtHandler implements JwtHandlerInterface
         if ($this->accessControl->isAuthorize() && !$this->httpUtils->checkRequestPath($request, '/'.$this->configuration->route()->loginCheck()) && !$this->httpUtils->checkRequestPath($request, '/'.$this->configuration->route()->login())) {
             if ($this->refreshToken) {
                 try {
-                    $this->doCheckUser($this->accessToken);
+                    $user= $this->doCheckUser($this->accessToken);
+                    try {
+                        $payload = $this->getPayload($this->refreshToken);
+                    } catch (\Exception $e) {
+                        throw new InvalidTokenException('Wrong refresh token');
+                    }
+                    $this->jwtTokenGenerator->generate($user);
+
+                    $this->jwtTokenGenerator
+                        ->refresh()
+                        ->setRefreshToken($this->refreshToken)
+                        ->setRefreshTokenCookie( $this->refreshToken, $payload[JwtTokenGeneratorInterface::EXP_KEY]);
                 } catch (MissingTokenException | JWTDecodeFailureException $e) {
                     if ($e instanceof MissingTokenException || ($e instanceof JWTDecodeFailureException && JWTDecodeFailureException::EXPIRED_TOKEN === $e->getReason())) {
                         try {
                             $user = $this->doCheckUser($this->refreshToken);
                             $this->jwtTokenGenerator->generate($user);
                         } catch (\Exception $e) {
-                            throw new InvalidTokenException('Error');
+                            throw new InvalidTokenException('Can\'t restore refresh token');
                         }
                     }
                 } catch (\Exception $e) {

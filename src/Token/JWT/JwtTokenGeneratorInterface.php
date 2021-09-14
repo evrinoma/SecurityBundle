@@ -2,6 +2,7 @@
 
 namespace Evrinoma\SecurityBundle\Token\JWT;
 
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 interface JwtTokenGeneratorInterface
