@@ -140,7 +140,7 @@ class AuthenticatorGuard extends AbstractGuardAuthenticator
             throw new AuthenticationException($e->getMessage());
         }
 
-        $extractor->setUsername(JwtTokenGeneratorInterface::PAYLOAD_KEY);
+        $extractor->setUsername($payload[JwtTokenGeneratorInterface::PAYLOAD_KEY]);
 
         return $extractor;
     }
