@@ -55,7 +55,7 @@ final class JwtHandler implements JwtHandlerInterface
         if ($this->accessControl->isAuthorize()
             && !$this->httpUtils->checkRequestPath($request, '/'.$this->configuration->route()->loginCheck())
             && !$this->httpUtils->checkRequestPath($request, '/'.$this->configuration->route()->login())
-            && !($request->request->has(SecurityModelInterface::AUTHENTICATE)&& $request->request->get(SecurityModelInterface::AUTHENTICATE) === SecurityModelInterface::BEARER)
+            && !($request->request->has(SecurityModelInterface::AUTHENTICATE) && $request->request->get(SecurityModelInterface::AUTHENTICATE) === SecurityModelInterface::BEARER)
         ) {
             if ($this->refreshToken) {
                 try {
