@@ -4,6 +4,7 @@ namespace Evrinoma\SecurityBundle\Handler;
 
 use Evrinoma\SecurityBundle\AccessControl\AccessControlInterface;
 use Evrinoma\SecurityBundle\Configuration\Configuration;
+use Evrinoma\SecurityBundle\Model\SecurityModelInterface;
 use Evrinoma\SecurityBundle\Token\JWT\JwtTokenGeneratorInterface;
 use Evrinoma\SecurityBundle\Token\JWT\JwtTokenInterface;
 use Evrinoma\SecurityBundle\Token\JWT\JwtTokenServiceInterface;
@@ -51,7 +52,11 @@ final class JwtHandler implements JwtHandlerInterface
     {
         $this->jwtTokenGenerator->reset();
 
-        if ($this->accessControl->isAuthorize() && !$this->httpUtils->checkRequestPath($request, '/'.$this->configuration->route()->loginCheck()) && !$this->httpUtils->checkRequestPath($request, '/'.$this->configuration->route()->login())) {
+        if ($this->accessControl->isAuthorize()
+            && !$this->httpUtils->checkRequestPath($request, '/'.$this->configuration->route()->loginCheck())
+            && !$this->httpUtils->checkRequestPath($request, '/'.$this->configuration->route()->login())
+            && !($request->request->has(SecurityModelInterface::AUTHENTICATE)&& $request->request->get(SecurityModelInterface::AUTHENTICATE) === SecurityModelInterface::BEARER)
+        ) {
             if ($this->refreshToken) {
                 try {
                     $user= $this->doCheckUser($this->accessToken);
