@@ -14,7 +14,7 @@ class LdapProvider implements LdapProviderInterface
     /**
      * @var array $servers
      */
-    private array $servers;
+    private array $servers = [];
 
     /**
      * @var string
