@@ -6,9 +6,7 @@ namespace Evrinoma\SecurityBundle\DependencyInjection;
 use Evrinoma\SecurityBundle\EvrinomaSecurityBundle;
 use Evrinoma\UtilsBundle\DependencyInjection\HelperTrait;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
@@ -24,8 +22,8 @@ class EvrinomaSecurityExtension extends Extension
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
-        $configuration   = $this->getConfiguration($configs, $container);
-        $config          = $this->processConfiguration($configuration, $configs);
+        $configuration = $this->getConfiguration($configs, $container);
+        $config        = $this->processConfiguration($configuration, $configs);
 
         $this->addDefinition(
             $container,
