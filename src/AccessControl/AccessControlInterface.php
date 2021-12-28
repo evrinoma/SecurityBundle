@@ -11,5 +11,7 @@ interface AccessControlInterface
     public function getAuthorizedUser(): UserInterface;
 
     public function isAuthorize(): bool;
+
+    public function denyAccessUnlessGranted($attribute, $subject = null, string $message = 'Access Denied.'): void;
 //endregion Getters/Setters
 }
