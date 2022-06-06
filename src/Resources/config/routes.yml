@@ -1,0 +1,3 @@
+security:
+  resource: "@EvrinomaSecurityBundle/Resources/config/routing/default.yml"
+  prefix: evrinoma

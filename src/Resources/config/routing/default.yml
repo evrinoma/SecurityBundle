@@ -1,0 +1,3 @@
+security_default:
+  resource: "@EvrinomaSecurityBundle/Controller/SecurityController.php"
+  type: annotation
