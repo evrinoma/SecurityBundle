@@ -1,0 +1,42 @@
+services:
+  Evrinoma\SecurityBundle\Controller\SecurityController:
+    alias: evrinoma.security.default.controller
+    public: true
+
+  evrinoma.security.default.controller:
+    class: Evrinoma\SecurityBundle\Controller\SecurityController
+    arguments:
+      - '@security.csrf.token_manager'
+    autowire: true
+
+  Evrinoma\SecurityBundle\Guard\Login\AuthenticatorGuard:
+    alias: evrinoma.security.guard.login
+    public: true
+
+  evrinoma.security.guard.login:
+    class: Evrinoma\SecurityBundle\Guard\Login\AuthenticatorGuard
+    autowire: true
+
+  Evrinoma\SecurityBundle\Guard\Ldap\AuthenticatorGuard:
+    alias: evrinoma.security.guard.ldap
+    public: true
+
+  evrinoma.security.guard.ldap:
+    class: Evrinoma\SecurityBundle\Guard\Ldap\AuthenticatorGuard
+    autowire: true
+
+  Evrinoma\SecurityBundle\Guard\Session\AuthenticatorGuard:
+    alias: evrinoma.security.guard.session
+    public: true
+
+  evrinoma.security.guard.session:
+    class: Evrinoma\SecurityBundle\Guard\Session\AuthenticatorGuard
+    autowire: true
+
+  Evrinoma\SecurityBundle\Provider\Ldap\LdapProviderInterface:
+    alias: evrinoma.security.provider.ldap
+    public: true
+
+  evrinoma.security.provider.ldap:
+    class: Evrinoma\SecurityBundle\Provider\Ldap\LdapProvider
+    autowire: true
