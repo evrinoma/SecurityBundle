@@ -1,0 +1,19 @@
+{% trans_default_domain 'SecurityBundle' %}
+
+{% block security %}
+    <div id="login-div">
+        <login-wrapper
+                user-name-placeholder="{{ 'security.login.username'|trans }}"
+                password-placeholder="{{ 'security.login.password'|trans }}"
+                remember-label="{{ 'security.login.remember_me'|trans }}"
+                action="{{ path('security_check') }}"
+                csrf-token="{{ csrf_token }}"
+                form-title="Welcome to HR"
+                jwt-off
+                {% if error %}
+                    error-message="{{ error.messageKey|trans(error.messageData, 'security') }}"
+                {% endif %}
+        />
+    </div>
+{% endblock security %}
+
