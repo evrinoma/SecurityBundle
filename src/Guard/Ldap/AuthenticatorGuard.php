@@ -139,6 +139,7 @@ class AuthenticatorGuard extends AbstractGuardAuthenticator
                 foreach ($event->headerData() as $key => $value) {
                     $response->headers->set($key, $value);
                 }
+                $event->setUser($token->getUser());
             } else {
                 $response = new JsonResponse([], Response::HTTP_NO_CONTENT);
             }

@@ -5,6 +5,7 @@ namespace Evrinoma\SecurityBundle\Event;
 
 
 use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 interface EventInterface
 {
@@ -26,5 +27,7 @@ interface EventInterface
     public function setUrl(string $url): EventInterface;
 
     public function setResponse(array $response): EventInterface;
+
+    public function setUser(UserInterface $user): EventInterface;
 //endregion Getters/Setters
 }
