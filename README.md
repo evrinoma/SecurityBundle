@@ -11,7 +11,7 @@
             redirect: core_home - перенаправление в случае успеха
         event:
             on_authentication_success: true   - включение/выключение события на успешную авторизацию
-            on_authentication_failure: ~      - включение/выключение события на успешную авторизацию
+            on_authentication_failure: ~      - включение/выключение события на не успешную авторизацию
         #настройки сервров АД
         ldap_servers:
             server.ru:
@@ -38,8 +38,8 @@
   
 #Тесты:
     
-/**
+```
 composer install --dev
 /usr/bin/php vendor/phpunit/phpunit/phpunit --bootstrap tests/bootstrap.php --configuration phpunit.xml.dist tests --teamcity
-*/
+```
 
